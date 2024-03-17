@@ -1,8 +1,6 @@
 const CACHE_NAME = "version-1";
 const urlsToCache = ['index.html', 'offline.html'];
 
-const self = this;
-
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
@@ -14,27 +12,33 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+    const { request } = event;
+
     if (!navigator.onLine) {
+        // If offline, respond with cached weather data if available
         event.respondWith(
-            caches.match(event.request)
+            caches.match(request)
                 .then((response) => {
                     if (response) {
-                        return response;
+                        return response; 
                     }
-                    return caches.match('offline.html');
+                    return caches.match('offline.html'); 
                 })
         );
     } else {
+        // If online, fetch new data and cache it
         event.respondWith(
             caches.open(CACHE_NAME)
                 .then((cache) => {
-                    return fetch(event.request)
+                    return fetch(request)
                         .then((response) => {
-                            // Cache weather API responses
-                            if (event.request.url.includes('/data/2.5/weather')) {
-                                cache.put(event.request, response.clone());
+                            if (request.url.includes('/data/2.5/weather')) {
+                                cache.put(request, response.clone()); 
                             }
                             return response;
+                        })
+                        .catch(() => {
+                            return caches.match('offline.html');
                         });
                 })
         );
