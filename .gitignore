@@ -1,8 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-node_modules/
+weatherpwa/node_modules
+weatherpwa/node_modules/
 /.pnp
 .pnp.js
 
@@ -24,6 +24,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # dependencies
+
+weatherpwa/package-lock.json
+weatherpwa/package.json
 
 package-lock.json
 package.json
